@@ -30,6 +30,7 @@ async function run() {
 
         const foodCollection = client.db("foodItems").collection("food")
         const allFoodItemsCollection = client.db("AllFoodItems").collection("AllFood")
+        const PurchaseCollection = client.db("purchaseItems").collection("order")
 
 
         app.get("/foodItems", async(req,res) => {
@@ -59,6 +60,42 @@ async function run() {
             res.send(result);
     
           } )
+
+        app.get("/FoodPurchases/:id", async (req,res) => {
+            const id = req.params.id;
+            const query = {_id :  new ObjectId(id)}
+            const result = await foodCollection.findOne(query)
+            res.send(result);
+    
+          } )
+
+        app.get("/FoodPurchase/:id", async (req,res) => {
+            const id = req.params.id;
+            const query = {_id :  new ObjectId(id)}
+            const result = await allFoodItemsCollection.findOne(query)
+            res.send(result);
+    
+          } )
+
+        //Purchase Items
+
+        app.get("/purchaseConfirm", async(req,res) => {
+            console.log(req.query.email);
+            let query = {};
+            if (req.query.email) {
+                query = { email: req.query.email }      
+            }
+            const result = await PurchaseCollection.find(query).toArray();
+            res.send(result)
+        })
+
+        
+        app.post("/purchaseConfirm", async(req,res) =>{
+            const purchase = req.body;
+            console.log(purchase);
+            const result = await PurchaseCollection.insertOne(purchase)
+            res.send(result);
+        } )
 
 
         // Send a ping to confirm a successful connection
