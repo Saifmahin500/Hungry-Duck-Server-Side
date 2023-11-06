@@ -92,7 +92,6 @@ async function run() {
         
         app.post("/purchaseConfirm", async(req,res) =>{
             const purchase = req.body;
-            console.log(purchase);
             const result = await PurchaseCollection.insertOne(purchase)
             res.send(result);
         } )
