@@ -33,68 +33,79 @@ async function run() {
         const PurchaseCollection = client.db("purchaseItems").collection("order")
 
 
-        app.get("/foodItems", async(req,res) => {
+        app.get("/foodItems", async (req, res) => {
             const cursor = foodCollection.find();
             const result = await cursor.toArray();
             res.send(result)
         })
 
-        app.get("/allFoodItems", async(req,res) => {
+        app.get("/allFoodItems", async (req, res) => {
             const cursor = allFoodItemsCollection.find();
             const result = await cursor.toArray();
             res.send(result)
         })
 
-        app.get("/foodItems/:id", async (req,res) => {
+        app.get("/foodItems/:id", async (req, res) => {
             const id = req.params.id;
-            const query = {_id :  new ObjectId(id)}
+            const query = { _id: new ObjectId(id) }
             const result = await foodCollection.findOne(query)
             res.send(result);
-    
-          } )
 
-        app.get("/allFoodItems/:id", async (req,res) => {
+        })
+
+        app.get("/allFoodItems/:id", async (req, res) => {
             const id = req.params.id;
-            const query = {_id :  new ObjectId(id)}
+            const query = { _id: new ObjectId(id) }
             const result = await allFoodItemsCollection.findOne(query)
             res.send(result);
-    
-          } )
 
-        app.get("/FoodPurchases/:id", async (req,res) => {
+        })
+
+        app.get("/FoodPurchases/:id", async (req, res) => {
             const id = req.params.id;
-            const query = {_id :  new ObjectId(id)}
+            const query = { _id: new ObjectId(id) }
             const result = await foodCollection.findOne(query)
             res.send(result);
-    
-          } )
 
-        app.get("/FoodPurchase/:id", async (req,res) => {
+        })
+
+        app.get("/FoodPurchase/:id", async (req, res) => {
             const id = req.params.id;
-            const query = {_id :  new ObjectId(id)}
+            const query = { _id: new ObjectId(id) }
             const result = await allFoodItemsCollection.findOne(query)
             res.send(result);
-    
-          } )
+
+        })
 
         //Purchase Items
 
-        app.get("/purchaseConfirm", async(req,res) => {
+        app.get("/purchaseConfirm", async (req, res) => {
             console.log(req.query.email);
             let query = {};
             if (req.query.email) {
-                query = { email: req.query.email }      
+                query = { email: req.query.email }
             }
             const result = await PurchaseCollection.find(query).toArray();
             res.send(result)
         })
 
-        
-        app.post("/purchaseConfirm", async(req,res) =>{
+
+        app.post("/purchaseConfirm", async (req, res) => {
             const purchase = req.body;
             const result = await PurchaseCollection.insertOne(purchase)
             res.send(result);
-        } )
+        })
+
+        app.delete("/purchaseConfirm/:id", async (req, res) => {
+            const id = req.params.id;
+            console.log("delete", id);
+            const query = {
+              _id: new ObjectId(id),
+            };
+            const result = await PurchaseCollection.deleteOne(query);
+            console.log(result);
+            res.send(result);
+          });
 
 
         // Send a ping to confirm a successful connection
