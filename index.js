@@ -40,7 +40,9 @@ async function run() {
         })
 
         app.get("/allFoodItems", async (req, res) => {
-            const cursor = allFoodItemsCollection.find();
+            const page = parseInt(req.query.page)
+            const size = parseInt(req.query.size)
+            const cursor = allFoodItemsCollection.find().skip(page * size).limit(size);
             const result = await cursor.toArray();
             res.send(result)
         })
@@ -59,6 +61,12 @@ async function run() {
             const result = await allFoodItemsCollection.findOne(query)
             res.send(result);
 
+        })
+
+        app.get('/FoodItemsCount', async(req,res) => {
+            
+            const count = await allFoodItemsCollection.estimatedDocumentCount();
+            res.send({ count });
         })
 
         app.get("/FoodPurchases/:id", async (req, res) => {
@@ -106,6 +114,14 @@ async function run() {
             console.log(result);
             res.send(result);
           });
+
+        //   ADD FOOD ITEMS
+        app.post("/AddFoodItems", async (req, res) => {
+            const addFood = req.body;
+            const result = await allFoodItemsCollection.insertOne(addFood)
+            res.send(result);
+        })
+    
 
 
         // Send a ping to confirm a successful connection
