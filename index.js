@@ -28,9 +28,17 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
 
+        const userCollection = client.db("FoodUser").collection("user")
         const foodCollection = client.db("foodItems").collection("food")
         const allFoodItemsCollection = client.db("AllFoodItems").collection("AllFood")
         const PurchaseCollection = client.db("purchaseItems").collection("order")
+
+        // 
+        app.post("/users", async (req, res) => {
+            const user = req.body;
+            const result = await userCollection.insertOne(user);
+            res.send(result);
+          });
 
 
         app.get("/foodItems", async (req, res) => {
@@ -88,7 +96,6 @@ async function run() {
         //Purchase Items
 
         app.get("/purchaseConfirm", async (req, res) => {
-            console.log(req.query.email);
             let query = {};
             if (req.query.email) {
                 query = { email: req.query.email }
@@ -106,7 +113,6 @@ async function run() {
 
         app.delete("/purchaseConfirm/:id", async (req, res) => {
             const id = req.params.id;
-            console.log("delete", id);
             const query = {
               _id: new ObjectId(id),
             };
@@ -120,6 +126,15 @@ async function run() {
             const addFood = req.body;
             const result = await allFoodItemsCollection.insertOne(addFood)
             res.send(result);
+        })
+
+         app.get("/AddFoodItems", async (req, res) => {
+            let query = {};
+            if (req.query.email) {
+                query = { email: req.query.email }
+            }
+            const result = await  allFoodItemsCollection.find(query).toArray();
+            res.send(result)
         })
     
 
