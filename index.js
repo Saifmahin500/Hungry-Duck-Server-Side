@@ -27,7 +27,6 @@ async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
-
         const userCollection = client.db("FoodUser").collection("user")
         const foodCollection = client.db("foodItems").collection("food")
         const allFoodItemsCollection = client.db("AllFoodItems").collection("AllFood")
@@ -96,6 +95,7 @@ async function run() {
         //Purchase Items
 
         app.get("/purchaseConfirm", async (req, res) => {
+            console.log(req.query.email);
             let query = {};
             if (req.query.email) {
                 query = { email: req.query.email }
