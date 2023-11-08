@@ -95,10 +95,10 @@ async function run() {
         //Purchase Items
 
         app.get("/purchaseConfirm", async (req, res) => {
-            console.log(req.query.email);
+            console.log(req.query.BuyerEmail);
             let query = {};
-            if (req.query.email) {
-                query = { email: req.query.email }
+            if (req.query.BuyerEmail) {
+                query = { email: req.query.BuyerEmail }
             }
             const result = await PurchaseCollection.find(query).toArray();
             res.send(result)
